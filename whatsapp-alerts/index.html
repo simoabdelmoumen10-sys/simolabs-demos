@@ -16,7 +16,7 @@
     .cta { display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:12px; background:linear-gradient(135deg,#22c55e,#10b981); color:#04130a; font-weight:800; text-decoration:none; font-size:14px; }
     .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
     @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
-    .card { background:rgba(15,23,42,.88); border:1px solid var(--line); border-radius:18px; padding:20px; }
+    .card { background:rgba(15,23,42,.88); border:1px solid var(--line); border-radius:18px; padding:20px; min-width:0; overflow-x:auto; }
     label { display:block; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:12px 0 6px; }
     input, select { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #334155; background:#090f1d; color:var(--text); font-size:14px; }
     .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -29,7 +29,7 @@
     .err { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.35); color:#fca5a5; }
     .phone { background:#0b141a; border:1px solid #1f2c34; border-radius:16px; padding:16px; }
     .wa-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid #1f2c34; margin-bottom:14px; font-size:13px; color:#8696a0; }
-    .bubble { background:#005c4b; color:#e9edef; padding:14px 16px; border-radius:12px 12px 12px 2px; font-size:14px; line-height:1.55; white-space:pre-wrap; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .bubble { background:#005c4b; color:#e9edef; padding:14px 16px; border-radius:12px 12px 12px 2px; font-size:14px; line-height:1.55; white-space:pre-wrap; overflow-wrap:anywhere; word-break:break-word; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
     .hmac { margin-top:12px; font-size:12px; color:var(--cyan); word-break:break-all; background:#090f1d; padding:10px; border-radius:10px; border:1px solid #1e293b; font-family:monospace; }
   </style>
 </head>

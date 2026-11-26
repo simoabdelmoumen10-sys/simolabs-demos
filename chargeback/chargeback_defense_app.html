@@ -422,7 +422,7 @@ $('#saveBtn').addEventListener('click',saveDispute);
 $('#exportBtn').addEventListener('click',exportPack);
 $('#copyBtn').addEventListener('click',copyTemplate);
 $('#buyBtn').addEventListener('click',buy);
-$('#buyBtn2').addEventListener('click',buy);
+if($('#buyBtn2')) $('#buyBtn2').addEventListener('click',buy);
 
 checkAPI();
 loadHistory();
