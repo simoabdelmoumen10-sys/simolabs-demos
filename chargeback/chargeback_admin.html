@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chargeback Defense — Admin Dashboard · AUREL · OMEGA Studio</title>
+<style>
+:root {
+  --bg:#070a12; --surface:#0f172a; --surface2:#1e293b; --ink:#f8fafc;
+  --muted:#94a3b8; --line:#334155; --accent:#dfc293; --accent-ink:#0b1118;
+  --green:#34d399; --amber:#fbbf24; --red:#f87171; --blue:#60a5fa;
+  --ease:cubic-bezier(0.23,1,0.32,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 Inter,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html[dir="rtl"]body{direction:rtl;text-align:right}
+.skip{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;padding:10px 16px;background:var(--accent);color:var(--accent-ink);border-radius:8px;z-index:100;font-weight:700}
+.topbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:14px 24px;background:linear-gradient(180deg,color-mix(in srgb,var(--surface)85%,transparent),var(--bg));backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:0.02em}
+.crest{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;border:1px solid var(--accent);color:var(--accent);font:700 14px Georgia,serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;min-height:48px;min-width:48px;transition:transform .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease)}
+button:hover{border-color:var(--accent);transform:translateY(-1px)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 10px 25px color-mix(in srgb,var(--accent)45%,transparent)}
+button.secondary{background:transparent;color:var(--ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:0}
+label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);display:block;margin-bottom:5px}
+.wrap{max-width:1400px;margin:0 auto;padding:30px 24px 100px}
+h1{font:600 clamp(28px,4vw,48px)/1.12 Georgia,serif;margin:0 0 8px}
+h2{font-size:20px;margin:0 0 10px}
+.kicker{font:11px ui-monospace,Consolas,monospace;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;display:block}
+.premium-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent)35%,var(--line));background:color-mix(in srgb,var(--accent)10%,transparent);color:var(--accent);font:700 11px ui-monospace;text-transform:uppercase;margin-bottom:18px}
+.hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent)12%,transparent) 0%,var(--bg) 55%);border:1px solid color-mix(in srgb,var(--accent)30%,var(--line));border-radius:18px;padding:34px 28px;color:#fff;margin-bottom:22px;box-shadow:0 24px 60px rgba(0,0,0,0.45)}
+.hero h1{color:#fff}
+.hero p{color:color-mix(in srgb,var(--ink)85%,var(--muted));max-width:64ch;margin:10px 0 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+.card h3{font-size:17px;margin:0 0 10px}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.metric{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:6px}
+.metric small{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.08em}
+.metric b{font-size:28px;font-variant-numeric:tabular-nums;font-weight:700}
+.metric.delta{font-size:13px;color:var(--green);font-weight:600}
+.table-wrap{overflow:auto;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;background:var(--surface2)}
+tr:hover{background:color-mix(in srgb,var(--accent)6%,transparent)}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font:700 11px ui-monospace;letter-spacing:0.08em;text-transform:uppercase}
+.badge.fight{background:color-mix(in srgb,var(--green)15%,transparent);color:var(--green);border:1px solid color-mix(in srgb,var(--green)40%,var(--line))}
+.badge.accept{background:color-mix(in srgb,var(--red)15%,transparent);color:var(--red);border:1px solid color-mix(in srgb,var(--red)40%,var(--line))}
+.badge.pending{background:color-mix(in srgb,var(--amber)15%,transparent);color:var(--amber);border:1px solid color-mix(in srgb,var(--amber)40%,var(--line))}
+.filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filter-chip{padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:12px;cursor:pointer}
+.filter-chip.active{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.empty{color:var(--muted);font-style:italic;padding:28px;text-align:center}
+.tag{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;padding:4px 10px;border-radius:6px;border:1px solid var(--line);color:var(--muted);font-weight:600}
+.tag.premium{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent)8%,transparent)}
+.toast{position:fixed;inset-inline-start:50%;transform:translatex(-50%);bottom:24px;background:var(--ink);color:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 16px;font-size:13px;z-index:50;hidden:true;max-width:90vw;text-align:center;opacity:.95}
+@media(max-width:720px){.wrap{padding:18px 16px 90px}.metrics-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+<div class="topbar">
+  <div class="brand"><span class="crest">Ω</span><div><div style="font-size:12px;color:var(--muted)">AUREL · OMEGA Studio — Revenue Recovery</div><div style="font-size:11px;color:var(--accent-ink);font-weight:700">Admin Dashboard</div></div></div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="tag premium">PREMIUM</span>
+    <button id="refreshBtn" class="secondary" style="width:fit-content;padding:8px 16px;">Refresh</button>
+    <a href="chargeback_defense_app.html" class="secondary" style="width:fit-content;padding:8px 16px;">Back to Assessment</a>
+  </div>
+</div>
+<div class="wrap">
+  <section class="hero">
+    <span class="kicker">Chargeback Defense · Dispute Tracking</span>
+    <h1>Admin Dashboard</h1>
+    <p>Track all chargeback disputes, monitor recovery potential, and manage your response pipeline.</p>
+  </section>
+  <span class="premium-badge">Tier: Enterprise · Real-time tracking</span>
+
+  <div class="metrics-grid">
+    <div class="metric">
+      <small>Total Disputes</small>
+      <b id="mTotal">0</b>
+      <span class="delta" id="mTotalDelta">0 new</span>
+    </div>
+    <div class="metric">
+      <small>Total Disputed Amount</small>
+      <b id="mTotalAmount">$0</b>
+      <span class="delta" id="mTotalAmountDelta">—</span>
+    </div>
+    <div class="metric">
+      <small>Expected Recovery</small>
+      <b id="mExpectedRecovery">$0</b>
+      <span class="delta" id="mExpectedRecoveryDelta">—</span>
+    </div>
+    <div class="metric">
+      <small>Avg Win Probability</small>
+      <b id="mAvgWinRate">0%</b>
+      <span class="delta" id="mAvgWinRateDelta">—</span>
+    </div>
+    <div class="metric">
+      <small>Disputes Needing Action</small>
+      <b id="mActionNeeded">0</b>
+      <span class="delta" id="mActionNeededDelta">—</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="filter-row">
+      <div style="display:flex;align-items:center;gap:8px">
+        <label style="margin:0">Filter by action:</div>
+        <button class="filter-chip active" id="filterAll">All</button>
+        <button class="filter-chip" id="filterFight">FIGHT</button>
+        <button class="filter-chip" id="filterAccept">ACCEPT</button>
+        <button class="filter-chip" id="filterPrevent">PREVENT</button>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <button id="exportBtn" class="primary" style="width:fit-content;padding:8px 16px;">Export CSV</button>
+        <button id="clearBtn" class="secondary" style="width:fit-content;padding:8px 16px;">Clear All</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table id="disputesTable">
+        <thead>
+          <tr>
+            <th>Case</th><th>Customer</th><th>Amount</th><th>Win %</th><th>Action</th><th>Age (days)</th><th>Status</th><th>Created</th>
+          </tr>
+        </thead>
+        <tbody id="disputesBody">
+          <tr><td colspan="8" class="empty">No disputes tracked yet. Use the assessment tool to create your first dispute.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast" hidden></div>
+<script>
+const API_BASE = 'http://127.0.0.1:8791';
+const STORAGE_KEY = 'cb_admin_disputes';
+const $ = (s)=>document.querySelector(s);
+const money = (n)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+const pct = (n)=>Math.round(n*100)/100 + '%';
+
+let disputes = [];
+let currentFilter = 'all';
+
+function toast(msg){const t=$('#toast');if(!t){const d=document.createElement('div');d.id='toast';d.hidden=true;d.setAttribute('role','status');d.setAttribute('aria-live','polite');document.body.appendChild(d);}const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(window.tt);window.tt=setTimeout(()=>el.hidden=true,3500)}
+
+function loadDisputes(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    disputes = raw ? JSON.parse(raw) : [];
+  }catch(e){disputes=[];}
+  render();
+}
+
+function saveDisputes(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(disputes));
+  render();
+}
+
+function addDispute(dispute){
+  disputes.unshift(dispute);
+  saveDisputes();
+  toast('Dispute added to tracking');
+}
+
+function removeDispute(id){
+  disputes = disputes.filter(d=>d.id!==id);
+  saveDisputes();
+  toast('Dispute removed');
+}
+
+function render(){
+  const filtered = currentFilter==='all' ? disputes : disputes.filter(d=>d.result.recommended_action===currentFilter.toUpperCase());
+
+  // Metrics
+  const total = disputes.length;
+  const totalAmount = disputes.reduce((s,d)=>s+(d.input.dispute_amount_usd/100),0);
+  const expectedRecovery = disputes.reduce((s,d)=>s+(d.result.expected_recovery_usd/100),0);
+  const avgWinRate = total ? disputes.reduce((s,d)=>s+d.result.win_probability_pct,0)/total : 0;
+  const actionNeeded = disputes.filter(d=>d.result.recommended_action==='FIGHT').length;
+
+  $('#mTotal').textContent = total;
+  $('#mTotalDelta').textContent = total>0 ? total+' total' : '0 new';
+  $('#mTotalAmount').textContent = money(totalAmount);
+  $('#mExpectedRecovery').textContent = money(expectedRecovery);
+  $('#mAvgWinRate').textContent = Math.round(avgWinRate)+'%';
+  $('#mActionNeeded').textContent = actionNeeded;
+
+  // Table
+  const body = $('#disputesBody');
+  if(!filtered.length){
+    body.innerHTML = '<tr><td colspan="8" class="empty">No disputes match this filter.</td></tr>';
+    return;
+  }
+  body.innerHTML = filtered.map(d=>{
+    const inp = d.input;
+    const res = d.result;
+    const date = new Date(d.created_at).toLocaleDateString();
+    const age = Math.floor((Date.now()-d.created_at)/(1000*60*60*24));
+    return `<tr>
+      <td><b>${inp.case_reference}</b></td>
+      <td>${inp.customer_name||'—'}</td>
+      <td>${money(inp.dispute_amount_usd/100)}</td>
+      <td><b>${res.win_probability_pct}%</b></td>
+      <td><span class="badge ${res.recommended_action==='FIGHT'?'fight':res.recommended_action==='ACCEPT'?'accept':'pending'}">${res.recommended_action}</span></td>
+      <td>${age}</td>
+      <td><span class="badge pending">Open</span></td>
+      <td>${date}</td>
+    </tr>`;
+  }).join('');
+}
+
+function exportCSV(){
+  if(!disputes.length){toast('No disputes to export');return}
+  const headers = ['Case Reference','Dispute Amount','Transaction Amount','Win Probability %','Recommended Action','Expected Recovery','Dispute Age (Days)','Created At','Customer Name'];
+  const rows = disputes.map(d=>{
+    const inp=d.input; const res=d.result;
+    const date = new Date(d.created_at).toISOString();
+    return [
+      inp.case_reference,
+      inp.dispute_amount_usd/100,
+      inp.transaction_amount_usd/100,
+      res.win_probability_pct,
+      res.recommended_action,
+      res.expected_recovery_usd/100,
+      Math.floor((Date.now()-d.created_at)/(1000*60*60*24)),
+      date,
+      inp.customer_name||''
+    ].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',');
+  });
+  const csv = [headers.join(','), ...rows].join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='chargeback-disputes-'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
+  URL.revokeObjectURL(url);
+  toast('CSV exported');
+}
+
+function clearAll(){
+  if(!confirm('Clear all tracked disputes? This cannot be undone.')) return;
+  disputes = [];
+  saveDisputes();
+  toast('All disputes cleared');
+}
+
+// API sync - try to fetch from backend if running
+async function syncFromAPI(){
+  try{
+    const r = await fetch(API_BASE+'/api/v1/disputes',{cache:'no-store'});
+    if(r.ok){
+      const apiDisputes = (await r.json()).disputes||[];
+      // Merge API disputes with local ones
+      const apiIds = new Set(apiDisputes.map(d=>d.id));
+      const localOnly = disputes.filter(d=>!apiIds.has(d.id));
+      disputes = [...apiDisputes, ...localOnly];
+      saveDisputes();
+      toast('Synced with backend API');
+    }
+  }catch(e){
+    // API not running, use localStorage only
+  }
+}
+
+$('#refreshBtn').addEventListener('click',()=>{
+  syncFromAPI().then(()=>toast('Refreshed'));
+});
+
+$('#exportBtn').addEventListener('click',exportCSV);
+$('#clearBtn').addEventListener('click',clearAll);
+
+document.querySelectorAll('.filter-chip').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-chip').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.id.replace('filter','').toLowerCase();
+    render();
+  });
+});
+
+// Listen for new disputes from the assessment tool via storage event
+window.addEventListener('storage',(e)=>{
+  if(e.key===STORAGE_KEY) loadDisputes();
+});
+
+// Expose global for the assessment tool to save disputes directly
+window.cbAdminAddDispute = (dispute)=>{
+  addDispute(dispute);
+  toast('New dispute tracked from assessment');
+};
+
+// Init
+loadDisputes();
+syncFromAPI();
+</script>
+</body>
+</html>

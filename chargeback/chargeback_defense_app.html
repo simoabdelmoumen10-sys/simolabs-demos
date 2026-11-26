@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chargeback Defense — Revenue Recovery Platform · AUREL · OMEGA Studio</title>
+<style>
+:root {
+  --bg:#070a12; --surface:#0f172a; --surface2:#1e293b; --ink:#f8fafc;
+  --muted:#94a3b8; --line:#334155; --accent:#dfc293; --accent-ink:#0b1118;
+  --green:#34d399; --amber:#fbbf24; --red:#f87171; --ease:cubic-bezier(0.23,1,0.32,1);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.6 Inter,"Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+html[dir="rtl"]body{direction:rtl;text-align:right}
+.skip{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.skip:focus{position:fixed;top:12px;left:12px;width:auto;height:auto;padding:10px 16px;background:var(--accent);color:var(--accent-ink);border-radius:8px;z-index:100;font-weight:700}
+.topbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:14px 24px;background:linear-gradient(180deg,color-mix(in srgb,var(--surface)85%,transparent),var(--bg));backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:0.02em}
+.crest{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;border:1px solid var(--accent);color:var(--accent);font:700 14px Georgia,serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;min-height:48px;min-width:48px;transition:transform .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease)}
+button:hover{border-color:var(--accent);transform:translateY(-1px)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);box-shadow:0 10px 25px color-mix(in srgb,var(--accent)45%,transparent)}
+button.primary:hover{background:color-mix(in srgb,var(--accent)90%,var(--bg))}
+button.secondary{background:transparent;color:var(--ink)}
+button:disabled{opacity:.5;cursor:not-allowed}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+input,select,textarea{width:100%;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;min-width:0}
+label{font-size:11px;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);display:block;margin-bottom:5px}
+.wrap{max-width:1100px;margin:0 auto;padding:30px 24px 100px}
+h1{font:600 clamp(30px,4vw,52px)/1.12 Georgia,serif;margin:0 0 8px}
+.kicker{font:11px ui-monospace,Consolas,monospace;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;display:block}
+.premium-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid color-mix(in srgb,var(--accent)35%,var(--line));background:color-mix(in srgb,var(--accent)10%,transparent);color:var(--accent);font:700 11px ui-monospace;text-transform:uppercase;margin-bottom:18px}
+.hero{background:linear-gradient(135deg,color-mix(in srgb,var(--accent)12%,transparent) 0%,var(--bg) 55%);border:1px solid color-mix(in srgb,var(--accent)30%,var(--line));border-radius:18px;padding:34px 28px;color:#fff;margin-bottom:22px;box-shadow:0 24px 60px rgba(0,0,0,0.45)}
+.hero h1{color:#fff}
+.hero p{color:color-mix(in srgb,var(--ink)85%,var(--muted));max-width:64ch;margin:10px 0 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+.card h3{font-size:17px;margin:0 0 10px}
+.field-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:16px}
+.empty{color:var(--muted);font-style:italic;padding:28px;text-align:center}
+.verdict{display:flex;gap:12px;align-items:flex-start;margin-top:12px;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;font:700 12px ui-monospace;letter-spacing:0.08em;text-transform:uppercase}
+.badge.fight{background:color-mix(in srgb,var(--green)15%,transparent);color:var(--green);border:1px solid color-mix(in srgb,var(--green)40%,var(--line))}
+.badge.accept{background:color-mix(in srgb,var(--red)15%,transparent);color:var(--red);border:1px solid color-mix(in srgb,var(--red)40%,var(--line))}
+.badge.prevent{background:color-mix(in srgb,var(--amber)15%,transparent);color:var(--amber);border:1px solid color-mix(in srgb,var(--amber)40%,var(--line))}
+.metric{display:flex;flex-direction:column;gap:4px}
+.metric small{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:0.08em}
+.metric b{font-size:24px;font-variant-numeric:tabular-nums;font-weight:700}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.checklist{list-style:none;padding:0;margin:0}
+.checklist li{padding:10px 0;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:10px}
+.checklist li:last-child{border-bottom:none}
+.checklist .box{display:inline-block;width:18px;height:18px;border:1px solid var(--line);border-radius:5px;flex-shrink:0;margin-top:2px}
+.checklist li.checked .box{background:var(--green);border-color:var(--green)}
+.checklist li.urgent .box{border-color:var(--red)}
+.checklist li.urgent{color:var(--red)}
+.template{background:color-mix(in srgb,var(--surface2)70%,var(--bg));border:1px solid var(--line);border-radius:10px;padding:18px;font-family:ui-monospace,Consolas,monospace;font-size:12px;white-space:pre-wrap;overflow:auto;max-height:340px}
+.tag{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;padding:4px 10px;border-radius:6px;border:1px solid var(--line);color:var(--muted);font-weight:600}
+.tag.premium{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent)8%,transparent)}
+.reasons{margin:10px 0;padding:12px;background:var(--surface2);border-radius:8px;font-size:12px;color:var(--muted)}
+.reasons li{margin:4px 0;padding-left:14px;position:relative}
+.reasons li:before{content:"▹";position:absolute;left:0;color:var(--accent)}
+.deadline{padding:10px 14px;border-radius:8px;margin-top:10px;font-weight:700;font-size:12px}
+.deadline.critical{background:color-mix(in srgb,var(--red)12%,transparent);color:var(--red);border:1px solid color-mix(in srgb,var(--red)40%,var(--line))}
+.deadline.warning{background:color-mix(in srgb,var(--amber)12%,transparent);color:var(--amber);border:1px solid color-mix(in srgb,var(--amber)40%,var(--line))}
+.deadline.on-track{background:color-mix(in srgb,var(--green)12%,transparent);color:var(--green);border:1px solid color-mix(in srgb,var(--green)40%,var(--line))}
+@media(max-width:720px){.wrap{padding:18px 16px 90px}.field-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to main content</a>
+<div class="topbar">
+  <div class="brand"><span class="crest">Ω</span><div><div style="font-size:12px;color:var(--muted)">AUREL · OMEGA Studio — Revenue Recovery</div><div style="font-size:11px;color:var(--accent-ink);font-weight:700">Chargeback Defense API</div></div></div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span class="tag premium">PREMIUM</span>
+    <span id="apiStatus" style="font-size:11px;color:var(--muted)">API: checking…</span>
+    <button id="buyBtn" class="primary" style="width:fit-content;padding:10px 20px;">Buy · $49 Pilot</button>
+  </div>
+</div>
+<div class="wrap">
+  <section class="hero">
+    <span class="kicker">Chargeback Defense · Working Product</span>
+    <h1>Revenue Recovery</h1>
+    <p>Dispute chargebacks with a calculated win probability, evidence checklist, and fill-in-the-blank rebuttal. Real backend API — no model calls, no external transmission.</p>
+  </section>
+  <span class="premium-badge">Tier: Enterprise · Pilot $490 · Kit $49</span>
+
+  <div class="card">
+    <h3>Dispute Assessment</h3>
+    <div class="field-row">
+      <div><label>Case reference</label><input id="caseRef" type="text" value="CB-2026-0412"></div>
+      <div><label>Dispute amount (USD)</label><input id="disputeAmount" type="number" value="450" step="0.01"></div>
+      <div><label>Transaction amount (USD)</label><input id="txAmount" type="number" value="450" step="0.01"></div>
+      <div><label>Processor fee (USD)</label><input id="cbFee" type="number" value="15" step="0.01"></div>
+    </div>
+    <div class="field-row">
+      <div><label>Days since dispute filed</label><input id="disputeAge" type="number" value="5" min="0"></div>
+      <div><label>Prior disputes from customer</label><input id="priorDisputes" type="number" value="0" min="0"></div>
+    </div>
+    <div class="field-row">
+      <label style="grid-column:1/-1">Evidence & context</label>
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="delivered" checked> Product or service delivered (proof on file)</label>
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="commLogged" checked> Pre-dispute communication logged</label>
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="deliveryProof" checked> Delivery proof available (tracking / usage logs)</label>
+      <label style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="policyPublished" checked> Refund policy published at checkout</label>
+    </div>
+    <div style="display:flex;gap:10">
+      <button class="primary" id="calcBtn" style="width:fit-content;padding:12px 28px;">Calculate Defense Strategy</button>
+      <button id="saveBtn" class="secondary" style="width:fit-content;padding:12px 28px;">Save Dispute</button>
+    </div>
+  </div>
+
+  <div id="results" style="display:none">
+    <div class="verdict">
+      <span id="actionBadge" class="badge fight">FIGHT</span>
+      <div class="metric"><small>Win probability</small><b id="winProb">0%</b></div>
+      <div class="metric"><small>Expected recovery</small><b id="expectedRecovery">$0</b></div>
+      <div class="metric"><small>Net ROI</small><b id="netROI">0%</b></div>
+      <div class="metric"><small>Labor cost</small><b id="laborCost">$0</b></div>
+    </div>
+    <div class="deadline" id="deadlineAlert" class="on-track">On track</div>
+    <ul class="reasons" id="scoreReasons"></ul>
+
+    <div class="card" style="margin-top:16px">
+      <h3>Evidence Checklist</h3>
+      <ul class="checklist" id="evidenceList"></ul>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h3>Rebuttal Template</h3>
+      <div class="template" id="rebuttalTemplate"></div>
+      <div style="margin-top:10px;display:flex;gap:8px">
+        <button id="exportBtn" class="primary" style="width:fit-content;padding:8px 16px;">Export Evidence Pack (.txt)</button>
+        <button id="copyBtn" class="secondary" style="width:fit-content;padding:8px 16px;">Copy Template</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <h3>Buy This Product</h3>
+    <p style="color:var(--muted);margin-bottom:12px">Purchase the Chargeback Defense kit — includes the calculation API, frontend app, evidence templates, and integration guide. Stripe test mode.</p>
+    <button id="buyBtn2" class="primary" style="width:fit-content;padding:12px 28px;">Buy via Stripe Test · $49 Pilot</button>
+    <p id="buyStatus" style="color:var(--muted);font-size:12px;margin-top:8px;"></p>
+  </div>
+</div>
+<script>
+const API_BASE = 'http://127.0.0.1:8791';
+const $ = (s)=>document.querySelector(s);
+const money = (n)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(n);
+const getNum = (id)=>Number($('#'+id).value)||0;
+
+let currentResult = null;
+let currentInput = null;
+
+function toast(msg){const t=$('#toast');if(!t){const d=document.createElement('div');d.id='toast';d.hidden=true;d.setAttribute('role','status');d.setAttribute('aria-live','polite');document.body.appendChild(d);}const el=document.getElementById('toast');el.textContent=msg;el.hidden=false;clearTimeout(window.tt);window.tt=setTimeout(()=>el.hidden=true,3500)}
+
+async function checkAPI(){
+  try{
+    const r=await fetch(API_BASE+'/api/v1/session',{cache:'no-store'});
+    if(r.ok){$('#apiStatus').textContent='API: live';$('#apiStatus').style.color='var(--green)';return await r.json()}
+  }catch(e){}
+  $('#apiStatus').textContent='API: offline';
+  $('#apiStatus').style.color='var(--red)';
+  toast('Backend API not running — start chargeback_api.py for live calculation');
+}
+
+async function calc(){
+  const d = {
+    case_reference: $('#caseRef').value||'DISPUTE',
+    dispute_amount_usd: getNum('disputeAmount'),
+    transaction_amount_usd: getNum('txAmount'),
+    chargeback_fee_usd: getNum('cbFee'),
+    product_or_service_delivered: $('#delivered').checked,
+    customer_communication_logged: $('#commLogged').checked,
+    delivery_proof_available: $('#deliveryProof').checked,
+    refund_policy_published: $('#policyPublished').checked,
+    prior_disputes_count: getNum('priorDisputes'),
+    dispute_age_days: getNum('disputeAge'),
+  };
+
+  let result;
+  try{
+    const r=await fetch(API_BASE+'/api/v1/calculate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(d)});
+    if(!r.ok) throw new Error('API error '+r.status);
+    const j=await r.json();
+    result=j.result;
+    currentInput=j.input;
+  }catch(e){
+    // Fallback: local calculation mirroring the engine
+    const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+    let score=30; const reasons=[];
+    if(d.product_or_service_delivered){score+=25;reasons.push('Delivery/fulfillment proven (+25)')}else reasons.push('No delivery proof');
+    if(d.customer_communication_logged){score+=15;reasons.push('Pre-dispute communication logged (+15)')}
+    if(d.delivery_proof_available){score+=20;reasons.push('Delivery proof available (+20)')}
+    if(d.refund_policy_published){score+=10;reasons.push('Refund policy published (+10)')}
+    const prior=d.prior_disputes_count;
+    if(prior===0){score+=5;reasons.push('First-time disputer (+5)')}else if(prior>2){score-=10;reasons.push('Repeat disputer (-10)')}
+    const age=d.dispute_age_days;
+    if(age<=7){score+=5;reasons.push('Early response window (+5)')}else if(age>14){score-=10;reasons.push('Aging dispute (-10)')}
+    score=clamp(score,0,100);
+    const disputeAmount=d.dispute_amount_usd*100;
+    const laborCost=Math.round(120*45/60);
+    const fee=d.chargeback_fee_usd*100;
+    const expectedRecovery=Math.round(disputeAmount*(score/100));
+    const netBenefit=expectedRecovery-fee-laborCost;
+    const netROI=laborCost?Math.round((netBenefit/laborCost)*100):0;
+    let action;
+    if(score>=60 && netBenefit>0) action='FIGHT';
+    else if(score>=30 && disputeAmount>fee+laborCost) action='FIGHT';
+    else if(score<20 || disputeAmount<laborCost) action='ACCEPT';
+    else action='PREVENT';
+    const ageLabel = age>=14?'CRITICAL: Response window near or past deadline — file immediately.':age>=7?'WARNING: Respond within 7 days to preserve representment rights.':'ON TRACK: You have time to compile evidence before the deadline.';
+    const ageClass = age>=14?'critical':age>=7?'warning':'on-track';
+    const checklist = [
+      {t:'Original transaction receipt (invoice, order ID, timestamp)',u:false},
+      {t:'Proof of delivery or service fulfillment (tracking, login logs, usage data)',u:!d.delivery_proof_available},
+      {t:'Customer communication log (emails, chats, support tickets)',u:!d.customer_communication_logged},
+      {t:'Refund / cancellation policy as shown to customer at checkout',u:false},
+      {t:'Terms of service acceptance record (checkbox, IP, timestamp)',u:false},
+    ];
+    const template = `CHARGEBACK REBUTTAL — ${d.case_reference}
+Merchant: {{merchant_name}} | MID: {{merchant_id}}
+Dispute Amount: $${(disputeAmount/100).toFixed(2)} | Transaction: $${(d.transaction_amount_usd*100/100).toFixed(2)}
+Reason Code: {{reason_code}} | Response Due: {{deadline}}
+
+SUMMARY:
+We are contesting this dispute. ${d.product_or_service_delivered?'The cardholder received the goods/services as described and delivery is documented.':'Delivery occurred per our records.'} Prior communication with the cardholder was ${d.customer_communication_logged?'documented':'attempted but not recorded'}.
+
+EVIDENCE ENCLOSED:
+${checklist.map(i=>'- '+i.t).join('\n')}
+
+REQUEST:
+Please reverse the dispute and return the funds to our account.
+
+Merchant signature: ________________  Date: __________
+`;
+    result = {
+      win_probability_pct: score,
+      recommended_action: action,
+      expected_recovery_usd: expectedRecovery,
+      net_roi_pct: netROI,
+      labor_cost_usd: laborCost,
+      chargeback_fee_usd: fee,
+      net_benefit_usd: netBenefit,
+      evidence_checklist: checklist,
+      response_template: template,
+      deadline_alert: ageLabel,
+      score_reasons: reasons,
+    };
+    currentInput = d;
+    toast('Using local calculation (API offline)');
+  }
+  currentResult = result;
+  renderResult(result);
+}
+
+function renderResult(r){
+  $('#actionBadge').textContent = r.recommended_action;
+  $('#actionBadge').className = 'badge ' + (r.recommended_action==='FIGHT'?'fight':r.recommended_action==='ACCEPT'?'accept':'prevent');
+  $('#winProb').textContent = r.win_probability_pct + '%';
+  $('#expectedRecovery').textContent = money(r.expected_recovery_usd/100);
+  $('#netROI').textContent = r.net_roi_pct + '%';
+  $('#laborCost').textContent = money(r.labor_cost_usd/100);
+  $('#deadlineAlert').textContent = r.deadline_alert;
+  $('#deadlineAlert').className = 'deadline ' + (r.deadline_alert.startsWith('CRITICAL')?'critical':r.deadline_alert.startsWith('WARNING')?'warning':'on-track');
+  $('#scoreReasons').innerHTML = r.score_reasons.map(x=>'<li>'+x+'</li>').join('');
+  const evEl=$('#evidenceList');
+  evEl.innerHTML = r.evidence_checklist.map(i=>`<li><span class="box"></span>${i}</li>`).join('');
+  $('#rebuttalTemplate').textContent = r.response_template;
+  $('#results').style.display = 'block';
+  $('#results').scrollIntoView({behavior:'smooth'});
+}
+
+async function saveDispute(){
+  if(!currentResult){toast('Calculate first');return}
+  const record = {
+    id: 'cb-'+Date.now(),
+    created_at: Date.now(),
+    input: currentInput,
+    result: currentResult,
+  };
+  try{
+    const r=await fetch(API_BASE+'/api/v1/disputes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(record)});
+    if(!r.ok) throw new Error('save failed');
+  }catch(e){
+    // localStorage fallback (both assessment and admin keys)
+    const existing=JSON.parse(localStorage.getItem('cb_admin_disputes')||'[]');
+    existing.push(record);
+    localStorage.setItem('cb_admin_disputes',JSON.stringify(existing));
+    // Notify admin dashboard if open
+    window.dispatchEvent(new StorageEvent('storage',{key:'cb_admin_disputes',newValue:JSON.stringify(existing)}));
+    toast('Saved locally (API offline)');
+  }
+  loadHistory();
+  toast('Dispute saved');
+  // Push to admin dashboard if it's listening
+  if(window.opener && window.opener.cbAdminAddDispute){
+    window.opener.cbAdminAddDispute(record);
+  }
+}
+
+async function loadHistory(){
+  let disputes=[];
+  try{
+    const r=await fetch(API_BASE+'/api/v1/disputes',{cache:'no-store'});
+    if(r.ok) disputes=(await r.json()).disputes;
+  }catch(e){
+    disputes=JSON.parse(localStorage.getItem('cb_admin_disputes')||'[]');
+  }
+  const body=$('#historyBody');
+  if(!disputes.length){body.innerHTML='<tr><td colspan="5" class="empty">No saved disputes yet.</td></tr>';return}
+  body.innerHTML = disputes.map(d=>{
+    const inp=d.input; const res=d.result;
+    return `<tr><td><b>${inp.case_reference}</b></td><td>${money(inp.dispute_amount_usd/100)}</td><td>${res.win_probability_pct}%</td><td><span class="badge ${res.recommended_action==='FIGHT'?'fight':res.recommended_action==='ACCEPT'?'accept':'prevent'}">${res.recommended_action}</span></td><td>${new Date(d.created_at).toLocaleDateString()}</td></tr>`;
+  }).join('');
+}
+
+function exportPack(){
+  if(!currentResult){toast('Calculate first');return}
+  const merchantName=prompt('Merchant name for evidence pack:','My Store');
+  if(!merchantName) return;
+  const pack = `CHARGEBACK DEFENSE EVIDENCE PACK
+==============================
+Case: ${currentInput.case_reference}
+Merchant: ${merchantName}
+Dispute Amount: $${(currentInput.dispute_amount_usd).toFixed(2)}
+Transaction Amount: $${(currentInput.transaction_amount_usd).toFixed(2)}
+Reason Code: {{reason_code}} | Response Due: {{deadline}}
+
+ASSESSMENT
+----------
+Win Probability: ${currentResult.win_probability_pct}%
+Recommended Action: ${currentResult.recommended_action}
+Expected Recovery: $${(currentResult.expected_recovery_usd/100).toFixed(2)}
+Net ROI: ${currentResult.net_roi_pct}%
+Labor Cost: $${(currentResult.labor_cost_usd/100).toFixed(2)}
+Chargeback Fee: $${(currentResult.chargeback_fee_usd/100).toFixed(2)}
+Net Benefit: $${(currentResult.net_benefit_usd/100).toFixed(2)}
+
+SCORE BREAKDOWN
+---------------
+${currentResult.score_reasons.map(r=>'- '+r).join('\n')}
+
+EVIDENCE CHECKLIST
+------------------
+${currentResult.evidence_checklist.map(i=>'[ ] '+i).join('\n')}
+
+REBUTTAL TEMPLATE
+-----------------
+${currentResult.response_template.replace('{merchant_name}',merchantName).replace('{merchant_id}','').replace('{reason_code}','').replace('{deadline}','')}
+
+DEADLINE ALERT
+--------------
+${currentResult.deadline_alert}
+
+Generated by OMEGA Studio Chargeback Defense API v1.0.0`;
+  const blob=new Blob([pack],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`chargeback-evidence-${currentInput.case_reference}.txt`;a.click();
+  URL.revokeObjectURL(url);
+  toast('Evidence pack exported');
+}
+
+function copyTemplate(){
+  if(!currentResult){toast('Calculate first');return}
+  navigator.clipboard.writeText(currentResult.response_template).then(()=>toast('Template copied'));
+}
+
+function buy(){
+  const status=$('#buyStatus');
+  status.textContent='Connecting to billing service…';
+  status.style.color='var(--muted)';
+  let networkFailed=true;
+  fetch('http://127.0.0.1:8790/api/v1/billing/session',{cache:'no-store'})
+    .then(r=>{
+      networkFailed=false;
+      if(!r.ok) return r.json().catch(()=>({})).then(err=>{throw new Error(err.detail||'Billing unavailable')});
+      return r.json();
+    })
+    .then(j=>{
+      const token=j.token;
+      return fetch('http://127.0.0.1:8790/api/v1/billing/checkout-session',{
+        method:'POST',headers:{'Content-Type':'application/json','X-Local-Token':token},
+        body:JSON.stringify({price_id:'tier-kit',quantity:1})
+      });
+    })
+    .then(r=>{
+      networkFailed=false;
+      if(!r.ok) return r.json().catch(()=>({})).then(err=>{throw new Error(err.detail||'Checkout rejected')});
+      return r.json();
+    })
+    .then(j=>{
+      status.textContent='Checkout session created · '+j.session_id;
+      status.style.color='var(--green)';
+      console.log('Stripe URL:',j.url);
+      if(j.url){ window.location.href=j.url; }
+      else { toast('Redirect to Stripe Checkout (test mode) in production deployment'); }
+    })
+    .catch(e=>{
+      status.textContent=networkFailed
+        ? 'Billing not running — start production/billing.py with STRIPE_SECRET_KEY to enable live checkout.'
+        : (e.message||'Checkout error');
+      status.style.color=networkFailed ? 'var(--muted)' : 'var(--red, #ef4444)';
+    });
+}
+
+$('#calcBtn').addEventListener('click',calc);
+$('#saveBtn').addEventListener('click',saveDispute);
+$('#exportBtn').addEventListener('click',exportPack);
+$('#copyBtn').addEventListener('click',copyTemplate);
+$('#buyBtn').addEventListener('click',buy);
+$('#buyBtn2').addEventListener('click',buy);
+
+checkAPI();
+loadHistory();
+calc();
+</script>
+</body>
+</html>
