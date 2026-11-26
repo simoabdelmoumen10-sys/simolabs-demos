@@ -139,8 +139,12 @@ h1{font:600 clamp(30px,4vw,52px)/1.12 Georgia,serif;margin:0 0 8px}
 
   <div class="card" style="margin-top:24px">
     <h3>Buy This Product</h3>
-    <p style="color:var(--muted);margin-bottom:12px">Purchase the Chargeback Defense kit — includes the calculation API, frontend app, evidence templates, and integration guide. Stripe test mode.</p>
-    <button id="buyBtn2" class="primary" style="width:fit-content;padding:12px 28px;">Buy via Stripe Test · $49 Pilot</button>
+    <p style="color:var(--muted);margin-bottom:12px">Purchase the Chargeback Defense kit — includes the calculation API, frontend app, evidence templates, and integration guide. Use code <strong style="color:var(--text)">LAUNCH25</strong> for 25% off at checkout.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <a href="https://buy.stripe.com/8x28wR5Nw1zl89Ya9b9bO0a" target="_blank" rel="noopener" class="primary" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:10px;padding:12px 22px;font-weight:700;font-size:14px;">Pay by Card (Stripe · $49 Kit) →</a>
+      <a href="https://buy.stripe.com/14AaEZdfY3Ht61Q9579bO0c" target="_blank" rel="noopener" class="secondary" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:700;font-size:14px;">Done-With-You Pilot (Stripe · $490) →</a>
+      <a href="https://aitoolsos.gumroad.com/l/chargeback-defense-recovery-desk/LAUNCH25" target="_blank" rel="noopener" class="secondary" style="display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border-radius:10px;padding:12px 18px;font-weight:700;font-size:14px;">Buy on Gumroad (LAUNCH25) →</a>
+    </div>
     <p id="buyStatus" style="color:var(--muted);font-size:12px;margin-top:8px;"></p>
   </div>
 </div>
@@ -371,8 +375,8 @@ function buy(){
   const status=$('#buyStatus');
   const host=window.location.hostname;
   if(host && host!=='127.0.0.1' && host!=='localhost'){
-    const url='https://aitoolsos.gumroad.com/l/chargeback-defense-recovery-desk/LAUNCH25';
-    status.textContent='Opening live Gumroad checkout (LAUNCH25 · 25% off applied)…';
+    const url='https://buy.stripe.com/8x28wR5Nw1zl89Ya9b9bO0a';
+    status.textContent='Opening live Stripe checkout (use LAUNCH25 for 25% off)…';
     status.style.color='var(--green)';
     window.open(url,'_blank','noopener');
     return;
