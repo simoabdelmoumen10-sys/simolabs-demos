@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legal Contract Studio (EN / FR / ES) — Live Interactive Demo | SimoLabs</title>
+  <style>
+    :root { --bg:#070a12; --panel:#0f172a; --line:#1e293b; --text:#f8fafc; --muted:#94a3b8; --violet:#a855f7; --cyan:#22d3ee; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,system-ui,-apple-system,sans-serif; background:radial-gradient(circle at top,#1d1135,#070a12 58%); color:var(--text); padding:24px; min-height:100vh; }
+    .wrap { max-width:1180px; margin:0 auto; }
+    .top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; padding-bottom:18px; border-bottom:1px solid var(--line); margin-bottom:24px; }
+    .badge { display:inline-block; padding:5px 12px; border-radius:999px; background:rgba(168,85,247,.16); border:1px solid rgba(168,85,247,.4); color:#d8b4fe; font-size:12px; font-weight:700; }
+    h1 { margin:8px 0 4px; font-size:28px; }
+    .sub { margin:0; color:var(--muted); font-size:14px; }
+    .cta { padding:12px 20px; border-radius:12px; background:linear-gradient(135deg,#a855f7,#22d3ee); color:#090514; font-weight:800; text-decoration:none; font-size:14px; }
+    .grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:20px; }
+    @media (max-width:920px){ .grid{ grid-template-columns:1fr; } }
+    .card { background:rgba(15,23,42,.9); border:1px solid var(--line); border-radius:18px; padding:20px; }
+    label { display:block; font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:12px 0 6px; }
+    input, select, textarea { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #334155; background:#090f1d; color:var(--text); font-size:14px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .btns { display:flex; gap:10px; flex-wrap:wrap; margin:14px 0; }
+    button { cursor:pointer; border:0; border-radius:10px; padding:10px 14px; font-weight:700; font-size:13px; background:#1e293b; color:#f8fafc; }
+    button.primary { background:var(--cyan); color:#04111d; }
+    pre { background:#090f1d; border:1px solid #1e293b; border-radius:12px; padding:16px; font-size:13px; line-height:1.6; max-height:480px; overflow:auto; white-space:pre-wrap; color:#e2e8f0; }
+    .check { margin-top:14px; padding:12px; border-radius:12px; background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.25); font-size:12px; color:#cbd5e1; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <span class="badge">SIMOLABS REBIRTH · RB-03 · TRILINGUAL EN / FR / ES</span>
+        <h1>Legal Contract Studio</h1>
+        <p class="sub">6 commercial contract templates across 3 languages with Redline Risk Checklist &amp; instant export.</p>
+      </div>
+      <a class="cta" href="https://aitoolsos.gumroad.com" target="_blank" rel="noopener">Get Full Source ($36.75 w/ LAUNCH25) →</a>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="row">
+          <div>
+            <label>Contract Type</label>
+            <select id="type" onchange="render()">
+              <option value="nda">Mutual NDA</option>
+              <option value="freelance_msa">Freelance / Consulting MSA</option>
+              <option value="saas_dpa">SaaS + GDPR DPA</option>
+              <option value="employment">Employment Agreement</option>
+              <option value="commercial_lease">Commercial Lease</option>
+              <option value="partnership">Partnership / JV</option>
+            </select>
+          </div>
+          <div>
+            <label>Language</label>
+            <select id="lang" onchange="render()">
+              <option value="en">English (US / UK)</option>
+              <option value="fr">Français (FR / MA)</option>
+              <option value="es">Español (ES / MX)</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Party A (Client / Disclosing)</label>
+        <input id="party1" value="SimoLabs Digital Studio" oninput="render()" />
+
+        <label>Party B (Provider / Counterparty)</label>
+        <input id="party2" value="Acme Enterprise Partners" oninput="render()" />
+
+        <div class="row">
+          <div>
+            <label>Amount &amp; Currency</label>
+            <input id="amount" value="$4,500 USD" oninput="render()" />
+          </div>
+          <div>
+            <label>Effective Date</label>
+            <input id="date" type="date" value="2026-11-26" oninput="render()" />
+          </div>
+        </div>
+
+        <label>Special Clauses</label>
+        <textarea id="terms" rows="3" oninput="render()">Net 15 invoice settlement; IP transfers upon full payment.</textarea>
+
+        <div class="check">
+          <strong>Redline Risk Checklist:</strong>
+          <ul style="margin:6px 0 0 16px;padding:0;line-height:1.5;">
+            <li>Verify legal entity names &amp; signatory authority.</li>
+            <li>Confirm Net 15/30 payment &amp; pause-on-overdue clause.</li>
+            <li>Ensure IP transfers only after cleared payment.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="btns" style="margin-top:0;">
+          <button class="primary" onclick="copyText()">Copy Contract</button>
+          <button onclick="downloadMd()">Download .md</button>
+          <button onclick="window.print()">Print / PDF</button>
+        </div>
+        <pre id="out"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TITLES = {
+      nda: { en:'Mutual Non-Disclosure Agreement (NDA)', fr:'Accord de Confidentialité (NDA)', es:'Acuerdo de Confidencialidad (NDA)' },
+      freelance_msa: { en:'Master Freelance Services Agreement', fr:'Contrat Cadre de Prestation', es:'Contrato Marco de Servicios' },
+      saas_dpa: { en:'SaaS Subscription & GDPR DPA', fr:'Contrat SaaS & Annexe RGPD', es:'Contrato SaaS y Anexo RGPD' },
+      employment: { en:'Full-Time Employment Agreement', fr:'Contrat de Travail CDI', es:'Contrato Individual de Trabajo' },
+      commercial_lease: { en:'Commercial Property Lease', fr:'Bail Commercial', es:'Contrato de Arrendamiento Comercial' },
+      partnership: { en:'Strategic Partnership Agreement', fr:'Contrat de Partenariat', es:'Contrato de Alianza Estratégica' },
+    };
+
+    const CLAUSES = {
+      en: [
+        '1. Scope & Obligations — Parties shall perform all obligations in good faith under the agreed schedule.',
+        '2. Compensation & Payment — Invoices settle Net 15; overdue balances permit deliverable pause.',
+        '3. Confidentiality & IP — Non-public data remains protected for 36 months; custom IP transfers upon full payment.',
+        '4. Governing Law — Disputes submit to executive mediation before binding commercial venue.',
+      ],
+      fr: [
+        'Article 1 — Objet & Obligations : Les Parties exécutent leurs engagements de bonne foi selon le calendrier convenu.',
+        'Article 2 — Prix & Paiement : Factures payables à 15 jours nets ; suspension possible en cas de retard.',
+        'Article 3 — Confidentialité & PI : Données protégées 36 mois ; cession de PI après paiement intégral.',
+        'Article 4 — Droit Applicable : Médiation préalable de 15 jours avant toute saisine judiciaire.',
+      ],
+      es: [
+        'Cláusula 1 — Objeto y Alcance: Las Partes cumplirán sus obligaciones de buena fe conforme al cronograma.',
+        'Cláusula 2 — Contraprestación y Pago: Facturas a 15 días naturales; facultad de pausa por mora.',
+        'Cláusula 3 — Confidencialidad y PI: Reserva por 36 meses; cesión de PI sujeta a pago total.',
+        'Cláusula 4 — Jurisdicción: Mediación ejecutiva previa de 15 días antes de tribunales competentes.',
+      ],
+    };
+
+    let current = '';
+    function render() {
+      const t = document.getElementById('type').value;
+      const l = document.getElementById('lang').value;
+      const p1 = (document.getElementById('party1').value || 'Party A').replace(/[<>]/g,'');
+      const p2 = (document.getElementById('party2').value || 'Party B').replace(/[<>]/g,'');
+      const amt = (document.getElementById('amount').value || 'TBD').replace(/[<>]/g,'');
+      const dt = document.getElementById('date').value || '2026-11-26';
+      const terms = (document.getElementById('terms').value || 'None').replace(/[<>]/g,'');
+
+      current = [
+        `# ${TITLES[t][l]}`,
+        '',
+        `Party A: ${p1}`,
+        `Party B: ${p2}`,
+        `Effective Date: ${dt} | Value: ${amt}`,
+        '',
+        ...CLAUSES[l],
+        '',
+        `Additional Terms: ${terms}`,
+        '',
+        `Signed: _______________________ (${p1})`,
+        `Signed: _______________________ (${p2})`,
+      ].join('\n');
+      document.getElementById('out').textContent = current;
+    }
+
+    function copyText() { navigator.clipboard.writeText(current); }
+    function downloadMd() {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([current], { type:'text/markdown' }));
+      a.download = 'legal-contract.md';
+      a.click();
+    }
+    render();
+  </script>
+</body>
+</html>

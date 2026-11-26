@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp GitHub Alert Bot Pro — Live Simulator | SimoLabs</title>
+  <style>
+    :root { --bg:#070b14; --panel:#0f172a; --line:#1e293b; --text:#f8fafc; --muted:#94a3b8; --accent:#22c55e; --cyan:#38bdf8; --danger:#ef4444; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,system-ui,-apple-system,sans-serif; background:radial-gradient(circle at top,#0d211b,#070b14 55%); color:var(--text); min-height:100vh; padding:24px; }
+    .wrap { max-width:1100px; margin:0 auto; }
+    .top { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid var(--line); }
+    .badge { display:inline-block; padding:5px 12px; border-radius:999px; background:rgba(34,197,94,.14); border:1px solid rgba(34,197,94,.35); color:#4ade80; font-size:12px; font-weight:700; letter-spacing:.05em; }
+    h1 { margin:8px 0 4px; font-size:28px; }
+    .sub { color:var(--muted); margin:0; font-size:14px; }
+    .cta { display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:12px; background:linear-gradient(135deg,#22c55e,#10b981); color:#04130a; font-weight:800; text-decoration:none; font-size:14px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    @media (max-width:860px){ .grid{ grid-template-columns:1fr; } }
+    .card { background:rgba(15,23,42,.88); border:1px solid var(--line); border-radius:18px; padding:20px; }
+    label { display:block; font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin:12px 0 6px; }
+    input, select { width:100%; padding:10px 12px; border-radius:10px; border:1px solid #334155; background:#090f1d; color:var(--text); font-size:14px; }
+    .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .btns { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    button { cursor:pointer; border:0; border-radius:10px; padding:10px 16px; font-weight:700; font-size:13px; }
+    .btn-primary { background:var(--accent); color:#052e16; }
+    .btn-danger { background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.4); color:#fca5a5; }
+    .status { margin-top:14px; padding:10px 14px; border-radius:10px; font-size:13px; font-weight:700; }
+    .ok { background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.35); color:#86efac; }
+    .err { background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.35); color:#fca5a5; }
+    .phone { background:#0b141a; border:1px solid #1f2c34; border-radius:16px; padding:16px; }
+    .wa-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:10px; border-bottom:1px solid #1f2c34; margin-bottom:14px; font-size:13px; color:#8696a0; }
+    .bubble { background:#005c4b; color:#e9edef; padding:14px 16px; border-radius:12px 12px 12px 2px; font-size:14px; line-height:1.55; white-space:pre-wrap; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+    .hmac { margin-top:12px; font-size:12px; color:var(--cyan); word-break:break-all; background:#090f1d; padding:10px; border-radius:10px; border:1px solid #1e293b; font-family:monospace; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <div>
+        <span class="badge">SIMOLABS REBIRTH · RB-01 · $0 HOSTING</span>
+        <h1>WhatsApp GitHub Alert Bot Pro</h1>
+        <p class="sub">Real-time WebCrypto HMAC-SHA256 verification, delivery dedupe, branch filtering &amp; WhatsApp formatting.</p>
+      </div>
+      <a class="cta" href="https://aitoolsos.gumroad.com" target="_blank" rel="noopener">Get Full Source ($21.75 w/ LAUNCH25) →</a>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2 style="margin:0 0 8px;font-size:18px;">Webhook Event Simulator</h2>
+        <div class="row">
+          <div>
+            <label>GitHub Event</label>
+            <select id="event">
+              <option value="push">push (Commits)</option>
+              <option value="pull_request">pull_request</option>
+              <option value="workflow_run">workflow_run (CI Failure)</option>
+              <option value="release">release</option>
+              <option value="deployment_status">deployment_status</option>
+            </select>
+          </div>
+          <div>
+            <label>Branch Filter (empty = all)</label>
+            <input id="branchFilter" value="main" placeholder="main" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Repository</label>
+            <input id="repo" value="simolabs/coachos-pro" />
+          </div>
+          <div>
+            <label>Event Branch</label>
+            <input id="branch" value="main" />
+          </div>
+        </div>
+        <label>Webhook Secret (HMAC-SHA256)</label>
+        <input id="secret" value="whsec_simolabs_demo_secret" />
+
+        <div class="btns">
+          <button class="btn-primary" onclick="runSim(false)">Send Signed Webhook</button>
+          <button class="btn-danger" onclick="runSim(true)">Test Tampered Signature (401)</button>
+        </div>
+
+        <div id="statusBox" class="status ok">Ready.</div>
+        <div id="hmacBox" class="hmac">X-Hub-Signature-256: pending</div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin:0 0 12px;font-size:18px;">WhatsApp Preview</h2>
+        <div class="phone">
+          <div class="wa-head"><span>GitHub Alerts Bot · +1 (DevOps)</span><span>Online</span></div>
+          <div id="bubble" class="bubble">Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function hmacSha256(secret, body) {
+      const enc = new TextEncoder();
+      const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name:'HMAC', hash:'SHA-256' }, false, ['sign']);
+      const sig = await crypto.subtle.sign('HMAC', key, enc.encode(body));
+      return 'sha256=' + Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    function formatPreview(ev, repo, branch) {
+      if (ev === 'push') return `🔔 *${repo}*\n📤 *Push to ${branch}* by @simo\n  • feat: Harden HMAC webhook & dedupe (a81f3c2)\n  • test: Add 27 node --test specs (9b4e10d)\n\nhttps://github.com/${repo}`;
+      if (ev === 'pull_request') return `🔔 *${repo}*\n🔀 *PR #48 opened* by @alex\n  Add Stripe webhook retry guard\n  https://github.com/${repo}/pull/48\n\nhttps://github.com/${repo}`;
+      if (ev === 'workflow_run') return `🔔 *${repo}*\n❌ *Workflow: CI Gate* failure\n  Branch: ${branch}\n  https://github.com/${repo}/actions/runs/9102\n\nhttps://github.com/${repo}`;
+      if (ev === 'release') return `🔔 *${repo}*\n🚀 *Release published*: v2.0.0\n  Production Release\n  https://github.com/${repo}/releases/tag/v2.0.0\n\nhttps://github.com/${repo}`;
+      return `🔔 *${repo}*\n🟢 *Deploy (production)*: success\n  Edge build live on Vercel\n\nhttps://github.com/${repo}`;
+    }
+
+    async function runSim(tamper) {
+      const ev = document.getElementById('event').value;
+      const repo = document.getElementById('repo').value.trim() || 'owner/repo';
+      const branch = document.getElementById('branch').value.trim() || 'main';
+      const filter = document.getElementById('branchFilter').value.trim().toLowerCase();
+      const secret = document.getElementById('secret').value;
+
+      const payload = JSON.stringify({ event: ev, repo, branch, ts: Date.now() });
+      const sig = tamper ? 'sha256=' + '0'.repeat(64) : await hmacSha256(secret, payload);
+      document.getElementById('hmacBox').textContent = `X-Hub-Signature-256: ${sig}`;
+
+      const statusBox = document.getElementById('statusBox');
+      if (tamper) {
+        statusBox.className = 'status err';
+        statusBox.textContent = 'HTTP 401 Unauthorized — Invalid HMAC signature blocked before parsing.';
+        document.getElementById('bubble').textContent = '⛔ Alert blocked (invalid signature). No WhatsApp message dispatched.';
+        return;
+      }
+      if (filter && branch.toLowerCase() !== filter) {
+        statusBox.className = 'status ok';
+        statusBox.textContent = `HTTP 200 Filtered — Branch "${branch}" does not match filter "${filter}".`;
+        document.getElementById('bubble').textContent = `🔇 Filtered locally (branch "${branch}" muted).`;
+        return;
+      }
+      statusBox.className = 'status ok';
+      statusBox.textContent = 'HTTP 202 Queued — Signature verified, delivery unique, alert sent.';
+      document.getElementById('bubble').textContent = formatPreview(ev, repo, branch);
+    }
+
+    runSim(false);
+  </script>
+</body>
+</html>
