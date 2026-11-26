@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://simoabdelmoumen10-sys.github.io/simolabs-demos/sitemap.xml

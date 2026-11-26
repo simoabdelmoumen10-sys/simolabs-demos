@@ -369,6 +369,14 @@ function copyTemplate(){
 
 function buy(){
   const status=$('#buyStatus');
+  const host=window.location.hostname;
+  if(host && host!=='127.0.0.1' && host!=='localhost'){
+    const url='https://aitoolsos.gumroad.com/l/chargeback-defense-recovery-desk/LAUNCH25';
+    status.textContent='Opening live Gumroad checkout (LAUNCH25 · 25% off applied)…';
+    status.style.color='var(--green)';
+    window.open(url,'_blank','noopener');
+    return;
+  }
   status.textContent='Connecting to billing service…';
   status.style.color='var(--muted)';
   let networkFailed=true;
